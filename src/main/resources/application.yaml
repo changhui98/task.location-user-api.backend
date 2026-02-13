@@ -10,9 +10,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         show_sql: true
     open-in-view: false
+
+google:
+  maps:
+    api-key: ${GOOGLE_MAPS_API_KEY}
