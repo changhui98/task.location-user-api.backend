@@ -13,4 +13,6 @@ public interface UserRepository {
     Optional<User> findByUsername(String username);
 
     List<User> findNearbyUsers(String username);
+
+    List<User> findUsersWithin3km(double latitude, double longitude);
 }

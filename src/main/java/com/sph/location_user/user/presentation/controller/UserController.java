@@ -4,6 +4,7 @@ import com.sph.location_user.user.application.service.UserService;
 import com.sph.location_user.user.presentation.dto.request.UserCreateReq;
 import com.sph.location_user.user.presentation.dto.response.UserCreateRes;
 import com.sph.location_user.user.presentation.dto.response.UserDetailRes;
+import com.sph.location_user.user.presentation.dto.response.UserSearchByAddressRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +41,14 @@ public class UserController {
         @PathVariable String username
     ) {
         UserDetailRes res = userService.getUserDetail(username);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<UserSearchByAddressRes> searchUsersByAddress(
+        @RequestParam String address
+    ) {
+        UserSearchByAddressRes res = userService.searchUsersByAddress(address);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 

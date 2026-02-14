@@ -36,4 +36,10 @@ public class UserRepositoryImpl implements UserRepository {
 
         return userJpaRepository.findNearbyUsers(username);
     }
+
+    @Override
+    public List<User> findUsersWithin3km(double latitude, double longitude) {
+
+        return userJpaRepository.findUsersWithin3km(latitude, longitude);
+    }
 }

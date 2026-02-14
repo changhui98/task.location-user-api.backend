@@ -6,6 +6,7 @@ import com.sph.location_user.user.infrastructure.repository.GeocodingClient;
 import com.sph.location_user.user.presentation.dto.request.UserCreateReq;
 import com.sph.location_user.user.presentation.dto.response.UserCreateRes;
 import com.sph.location_user.user.presentation.dto.response.UserDetailRes;
+import com.sph.location_user.user.presentation.dto.response.UserSearchByAddressRes;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
@@ -76,6 +77,33 @@ public class UserService {
             user.getAddress(),
             nearbyUsers.stream()
                 .map(u -> new UserDetailRes.NearbyUser(
+                    u.getId(),
+                    u.getUsername(),
+                    u.getAddress()
+                )).toList()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public UserSearchByAddressRes searchUsersByAddress(String address) {
+
+        if (address == null || address.isBlank()) {
+            throw new IllegalArgumentException("주소는 필수입니다.");
+        }
+
+        GeocodingClient.GeoPoint geo = geocodingClient.convert(address);
+
+        double latitude = geo.latitude();
+        double longitude = geo.longitude();
+
+        List<User> users = userRepository.findUsersWithin3km(latitude, longitude);
+
+        return new UserSearchByAddressRes(
+            address,
+            latitude,
+            longitude,
+            users.stream()
+                .map(u -> new UserSearchByAddressRes.UserSummary(
                     u.getId(),
                     u.getUsername(),
                     u.getAddress()
