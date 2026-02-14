@@ -5,6 +5,8 @@ import com.sph.location_user.user.domain.repository.UserRepository;
 import com.sph.location_user.user.infrastructure.repository.GeocodingClient;
 import com.sph.location_user.user.presentation.dto.request.UserCreateReq;
 import com.sph.location_user.user.presentation.dto.response.UserCreateRes;
+import com.sph.location_user.user.presentation.dto.response.UserDetailRes;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -57,5 +59,27 @@ public class UserService {
         User saveUser = userRepository.save(user);
 
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    public UserDetailRes getUserDetail(String username) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(
+            () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+        );
+
+        List<User> nearbyUsers = userRepository.findNearbyUsers(username);
+
+        return new UserDetailRes(
+            user.getId(),
+            user.getUsername(),
+            user.getAddress(),
+            nearbyUsers.stream()
+                .map(u -> new UserDetailRes.NearbyUser(
+                    u.getId(),
+                    u.getUsername(),
+                    u.getAddress()
+                )).toList()
+        );
     }
 }

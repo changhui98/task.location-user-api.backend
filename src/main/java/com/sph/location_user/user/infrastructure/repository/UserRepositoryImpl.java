@@ -2,6 +2,8 @@ package com.sph.location_user.user.infrastructure.repository;
 
 import com.sph.location_user.user.domain.entity.User;
 import com.sph.location_user.user.domain.repository.UserRepository;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +23,17 @@ public class UserRepositoryImpl implements UserRepository {
     public User save(User user) {
 
         return userJpaRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+
+        return userJpaRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<User> findNearbyUsers(String username) {
+
+        return userJpaRepository.findNearbyUsers(username);
     }
 }
