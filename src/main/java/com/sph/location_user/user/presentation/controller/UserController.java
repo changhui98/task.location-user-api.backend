@@ -5,6 +5,7 @@ import com.sph.location_user.user.presentation.dto.request.UserCreateReq;
 import com.sph.location_user.user.presentation.dto.response.UserCreateRes;
 import com.sph.location_user.user.presentation.dto.response.UserDetailRes;
 import com.sph.location_user.user.presentation.dto.response.UserSearchByAddressRes;
+import com.sph.location_user.user.presentation.dto.response.UserSearchByCoordinateRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,5 +53,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-
+    @GetMapping("/search-by-coordinate")
+    public ResponseEntity<UserSearchByCoordinateRes> searchUsersByCoordinate(
+        @RequestParam double latitude,
+        @RequestParam double longitude
+    ) {
+        UserSearchByCoordinateRes res = userService.searchUsersByCoordinate(latitude, longitude);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
 }

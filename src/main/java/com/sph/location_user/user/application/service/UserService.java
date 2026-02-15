@@ -7,6 +7,7 @@ import com.sph.location_user.user.presentation.dto.request.UserCreateReq;
 import com.sph.location_user.user.presentation.dto.response.UserCreateRes;
 import com.sph.location_user.user.presentation.dto.response.UserDetailRes;
 import com.sph.location_user.user.presentation.dto.response.UserSearchByAddressRes;
+import com.sph.location_user.user.presentation.dto.response.UserSearchByCoordinateRes;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
@@ -104,6 +105,31 @@ public class UserService {
             longitude,
             users.stream()
                 .map(u -> new UserSearchByAddressRes.UserSummary(
+                    u.getId(),
+                    u.getUsername(),
+                    u.getAddress()
+                )).toList()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public UserSearchByCoordinateRes searchUsersByCoordinate(double latitude, double longitude) {
+
+        if (latitude < -90 || latitude > 90) {
+            throw new IllegalArgumentException("유효하지 않은 위도입니다.");
+        }
+
+        if (longitude < -180 || longitude > 180) {
+            throw new IllegalArgumentException("유효하지 않은 경도입니다.");
+        }
+
+        List<User> users = userRepository.findUsersWithin3kmByCoordinate(latitude, longitude);
+
+        return new UserSearchByCoordinateRes(
+            latitude,
+            longitude,
+            users.stream()
+                .map(u -> new UserSearchByCoordinateRes.UserSummary(
                     u.getId(),
                     u.getUsername(),
                     u.getAddress()

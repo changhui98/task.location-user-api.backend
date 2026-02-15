@@ -32,4 +32,13 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
             ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, 3000)
         """, nativeQuery = true)
     List<User> findUsersWithin3km(@Param("latitude") double latitude,@Param("longitude") double longitude);
+
+    @Query(value = """
+        SELECT u.*
+        FROM p_user u
+        WHERE ST_DWithin(
+            u.location,
+            ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography, 3000)
+        """, nativeQuery = true)
+    List<User> findUsersWithin3kmByCoordinate(double latitude, double longitude);
 }
