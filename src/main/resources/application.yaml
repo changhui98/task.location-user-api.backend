@@ -8,9 +8,14 @@ spring:
     password: ${POSTGRES_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
 
+  sql:
+    init:
+      mode: always
+
   jpa:
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
