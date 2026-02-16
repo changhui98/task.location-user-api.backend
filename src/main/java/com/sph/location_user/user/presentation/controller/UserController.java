@@ -6,7 +6,9 @@ import com.sph.location_user.user.presentation.dto.response.UserCreateRes;
 import com.sph.location_user.user.presentation.dto.response.UserDetailRes;
 import com.sph.location_user.user.presentation.dto.response.UserSearchByAddressRes;
 import com.sph.location_user.user.presentation.dto.response.UserSearchByCoordinateRes;
+import com.sph.location_user.user.presentation.dto.response.UsersRes;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,12 @@ public class UserController {
     @GetMapping("/test")
     public String test() {
         return "Test Success";
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsersRes>> getAllUsers() {
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }
 
     @PostMapping

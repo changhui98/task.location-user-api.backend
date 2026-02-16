@@ -8,8 +8,10 @@ import com.sph.location_user.user.presentation.dto.response.UserCreateRes;
 import com.sph.location_user.user.presentation.dto.response.UserDetailRes;
 import com.sph.location_user.user.presentation.dto.response.UserSearchByAddressRes;
 import com.sph.location_user.user.presentation.dto.response.UserSearchByCoordinateRes;
+import com.sph.location_user.user.presentation.dto.response.UsersRes;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -17,12 +19,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final GeocodingClient geocodingClient;
     private final GeometryFactory geometryFactory = new GeometryFactory();
+
+    @Transactional(readOnly = true)
+    public List<UsersRes> getAllUsers() {
+        long start = System.currentTimeMillis();
+
+        List<UsersRes> res = userRepository.findAll()
+            .stream()
+            .map(user -> new UsersRes(
+                user.getId(),
+                user.getUsername(),
+                user.getAddress()
+            )).toList();
+
+        long end = System.currentTimeMillis();
+        log.info("[⭐️ GET ALL USERS TIME : ] {} ms", (end - start));
+        return res;
+    }
 
     @Transactional
     public UserCreateRes createUser(UserCreateReq req) {

@@ -17,4 +17,6 @@ public interface UserRepository {
     List<User> findUsersWithin3km(double latitude, double longitude);
 
     List<User> findUsersWithin3kmByCoordinate(double latitude, double longitude);
+
+    List<User> findAll();
 }

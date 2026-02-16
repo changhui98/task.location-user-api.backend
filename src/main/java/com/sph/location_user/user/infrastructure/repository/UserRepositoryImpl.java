@@ -48,4 +48,10 @@ public class UserRepositoryImpl implements UserRepository {
 
         return userJpaRepository.findUsersWithin3kmByCoordinate(latitude, longitude);
     }
+
+    @Override
+    public List<User> findAll() {
+
+        return userJpaRepository.findAll();
+    }
 }
