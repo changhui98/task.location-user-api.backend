@@ -31,14 +31,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UsersRes> getAllUsers() {
-        List<UsersRes> res = userRepository.findAll()
+        return userRepository.findAll()
             .stream()
             .map(user -> new UsersRes(
                 user.getId(),
                 user.getUsername(),
                 user.getAddress()
             )).toList();
-        return res;
     }
 
     @Transactional
@@ -77,7 +76,13 @@ public class UserService {
 
         User saveUser = userRepository.save(user);
 
-        return null;
+        return new UserCreateRes(
+            saveUser.getId(),
+            saveUser.getUsername(),
+            saveUser.getAddress(),
+            saveUser.getLocation().getY(),
+            saveUser.getLocation().getX()
+        );
     }
 
     @Transactional(readOnly = true)
