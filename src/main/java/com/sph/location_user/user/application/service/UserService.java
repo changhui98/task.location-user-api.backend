@@ -29,8 +29,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<UsersRes> getAllUsers() {
-        long start = System.currentTimeMillis();
-
         List<UsersRes> res = userRepository.findAll()
             .stream()
             .map(user -> new UsersRes(
@@ -38,9 +36,6 @@ public class UserService {
                 user.getUsername(),
                 user.getAddress()
             )).toList();
-
-        long end = System.currentTimeMillis();
-        log.info("[⭐️ GET ALL USERS TIME : ] {} ms", (end - start));
         return res;
     }
 
