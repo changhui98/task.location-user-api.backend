@@ -1,5 +1,7 @@
 package com.sph.location_user.user.application.service;
 
+import com.sph.location_user.global.exception.AppException;
+import com.sph.location_user.user.domain.UserError;
 import com.sph.location_user.user.domain.entity.User;
 import com.sph.location_user.user.domain.repository.UserRepository;
 import com.sph.location_user.user.infrastructure.repository.GeocodingClient;
@@ -43,7 +45,7 @@ public class UserService {
     public UserCreateRes createUser(UserCreateReq req) {
 
         if (userRepository.existsByUsername(req.username())) {
-            throw new IllegalArgumentException("이미 존재하는 사용자입니다.");
+            throw new AppException(UserError.DUPLICATE_USERNAME);
         }
 
         Point point;
@@ -82,7 +84,7 @@ public class UserService {
     public UserDetailRes getUserDetail(String username) {
 
         User user = userRepository.findByUsername(username).orElseThrow(
-            () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+            () -> new AppException(UserError.USER_NOT_FOUND)
         );
 
         List<User> nearbyUsers = userRepository.findNearbyUsers(username);
